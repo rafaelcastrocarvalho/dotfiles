@@ -8,11 +8,12 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 Bundle 'CSApprox'
-Bundle 'scrooloose/nerdtree'
-Bundle 'tpope/vim-rails'
 Bundle 'vim-scripts/AutoTag'
 Bundle 'kien/ctrlp.vim'
+Bundle 'scrooloose/nerdtree'
 Bundle 'mileszs/ack.vim'
+Bundle 'vim-ruby/vim-ruby'
+Bundle 'tpope/vim-rails'
 Bundle 'derekwyatt/vim-scala'
 
 filetype plugin indent on "required by vundle
