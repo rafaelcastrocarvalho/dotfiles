@@ -78,6 +78,8 @@ set listchars+=precedes:<         " The character to show in the last column whe
 "remove trailing spaces when saving
 autocmd BufWritePre * :%s/\s\+$//e
 
+set background=dark
+colorscheme jellybeans
 
 if has("gui")
     "tell the term has 256 colors
@@ -85,11 +87,9 @@ if has("gui")
 
     if has("gui_gnome")
         set term=gnome-256color
-        colorscheme jellybeans
     else
         set term=xterm-256color
         set guitablabel=%M%t
-        colorscheme jellybeans
     endif
     if has("gui_mac") || has("gui_macvim")
         set guifont=Menlo:h14
