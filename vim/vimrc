@@ -82,8 +82,7 @@ set background=dark
 colorscheme jellybeans
 
 if has("gui")
-    "tell the term has 256 colors
-    set t_Co=256
+    set t_Co=256 "tell the term has 256 colors
 
     if has("gui_gnome")
         set term=gnome-256color
