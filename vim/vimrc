@@ -3,7 +3,7 @@
 set nocompatible
 
 
-syntax on           "turn on syntax highlighting
+syntax on           " turn on syntax highlighting
 filetype on         " Enable filetype detection
 filetype indent on  " Enable filetype-specific indenting
 filetype plugin on  " Enable filetype-specific plugins
