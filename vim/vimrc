@@ -80,18 +80,3 @@ autocmd BufWritePre * :%s/\s\+$//e
 
 set background=dark
 colorscheme jellybeans
-
-if has("gui")
-    set t_Co=256 "tell the term has 256 colors
-
-    if has("gui_gnome")
-        set term=gnome-256color
-    else
-        set term=xterm-256color
-        set guitablabel=%M%t
-    endif
-    elseif has("gui_win32") || has("gui_win32s")
-        set guifont=Consolas:h12
-        set enc=utf-8
-    endif
-endif
