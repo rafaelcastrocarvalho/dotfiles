@@ -25,7 +25,12 @@ set showcmd     "show incomplete cmds down the bottom
 set showmode    "show current mode down the bottom
 
 set incsearch   "find the next match as we type the search
-set hlsearch    "hilight searches by default
+set ignorecase  "turn searches case-insensitive
+set smartcase   "turn searches case-sensitive when upper-case character included, so /foo matches FOO and fOo, but /FOO only matches the former
+set hlsearch    "highlight searches by default
+"clear highlight
+nmap \q :nohlsearch<CR>
+
 
 set number      "add line numbers
 set showbreak=...
