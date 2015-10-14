@@ -61,16 +61,23 @@ set scrolloff=3
 set sidescrolloff=7
 set sidescroll=1
 
-"allow unsaved buffers to become hiden
-set hidden
 
-"jump to the window if a buffer is already opened in one
-set switchbuf=useopen
+set hidden            "allow unsaved buffers to become hiden
+set switchbuf=useopen "jump to the window if a buffer is already opened in one
+
+"switching between current and alternate file (last one edited in the current window) (C-6 does not work on Mac)
+nmap <C-e> :e#<CR>
+
+"convenient way to open next buffer
+nmap <C-n> :bnext<CR>
+
+"convenient way to open previous buffer
+nmap <C-p> :bprev<CR>
 
 "Toggles NERDTree
 nmap <silent> <Leader>p :NERDTreeToggle<CR>
 
-" List chars
+"List chars
 set list
 set listchars=""                  " Reset the listchars
 set listchars=tab:\ \             " a tab should display as "  ", trailing whitespace as "."
