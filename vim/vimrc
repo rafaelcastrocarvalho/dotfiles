@@ -14,12 +14,24 @@ filetype indent on
 " Enable filetype-specific plugins
 filetype plugin on
 
-" =============== Vundle Initialization ===============
+" =============== Vundle Initialization ===================
 " This loads all the plugins specified in ~/.vim/vundle.vim
 " Use Vundle plugin to manage all other plugins
 if filereadable(expand("~/.vim/vundle.vim"))
   source ~/.vim/vundle.vim
 endif
+
+" =============== Plugins configurations ===================
+
+" Toggles NERDTree
+nmap <silent> <Leader>p :NERDTreeToggle<CR>
+
+let g:airline_left_sep='>'
+
+" Enable Airline smarter tab line
+let g:airline#extensions#tabline#enabled = 1
+
+" ==========================================================
 
 " Allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -110,9 +122,6 @@ nmap <C-n> :bnext<CR>
 
 " Convenient way to open previous buffer
 nmap <C-p> :bprev<CR>
-
-" Toggles NERDTree
-nmap <silent> <Leader>p :NERDTreeToggle<CR>
 
 " List chars
 set list
