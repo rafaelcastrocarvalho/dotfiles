@@ -92,6 +92,16 @@ set hidden
 " Jump to the window if a buffer is already opened in one
 set switchbuf=useopen
 
+" Turn Off Swap Files
+set noswapfile
+set nobackup
+set nowb
+
+" Keep undo history across sessions by storing it in file
+silent !mkdir ~/.vim/backups > /dev/null 2>&1
+set undodir=~/.vim/backups
+set undofile
+
 " Switching between current and alternate file (last one edited in the current window) (C-6 does not work on Mac)
 nmap <C-e> :e#<CR>
 
@@ -103,7 +113,6 @@ nmap <C-p> :bprev<CR>
 
 " Toggles NERDTree
 nmap <silent> <Leader>p :NERDTreeToggle<CR>
-
 
 " List chars
 set list
@@ -124,7 +133,6 @@ set listchars+=extends:>
 " The character to show in the last column when wrap is
 " off and the line continues beyond the left of the screen
 set listchars+=precedes:<
-
 
 " Remove trailing spaces when saving
 autocmd BufWritePre * :%s/\s\+$//e
