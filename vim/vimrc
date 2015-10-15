@@ -1,12 +1,18 @@
-"Use Vim settings, rather then Vi settings (much better!).
-"This must be first, because it changes other options as a side effect.
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
 set nocompatible
 
+" Turn on syntax highlighting
+syntax on
 
-syntax on           " turn on syntax highlighting
-filetype on         " Enable filetype detection
-filetype indent on  " Enable filetype-specific indenting
-filetype plugin on  " Enable filetype-specific plugins
+" Enable filetype detection
+filetype on
+
+" Enable filetype-specific indenting
+filetype indent on
+
+" Enable filetype-specific plugins
+filetype plugin on
 
 " =============== Vundle Initialization ===============
 " This loads all the plugins specified in ~/.vim/vundle.vim
@@ -15,79 +21,112 @@ if filereadable(expand("~/.vim/vundle.vim"))
   source ~/.vim/vundle.vim
 endif
 
-"allow backspacing over everything in insert mode
+" Allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-"store lots of :cmdline history
+" Store lots of :cmdline history
 set history=1000
 
-set showcmd     "show incomplete cmds down the bottom
-set showmode    "show current mode down the bottom
+" Show incomplete cmds down the bottom
+set showcmd
 
-set incsearch   "find the next match as we type the search
-set ignorecase  "turn searches case-insensitive
-set smartcase   "turn searches case-sensitive when upper-case character included, so /foo matches FOO and fOo, but /FOO only matches the former
-set hlsearch    "highlight searches by default
-"clear highlight
+" Show current mode down the bottom
+set showmode
+
+" Find the next match as we type the search
+set incsearch
+
+" Turn searches case-insensitive
+set ignorecase
+
+" Turn searches case-sensitive when upper-case character included, so /foo matches FOO and fOo, but /FOO only matches the former
+set smartcase
+
+" Highlight searches by default
+set hlsearch
+
+" Clear highlight
 nmap \q :nohlsearch<CR>
 
+" Add line numbers
+set number
 
-set number      "add line numbers
 set showbreak=...
 set wrap linebreak nolist
 
-"turn off needless toolbar on gvim/mvim
+" Turn off needless toolbar on gvim/mvim
 set guioptions-=T
 
-
-"indent settings
+" Indent settings
 set shiftwidth=2
 set softtabstop=2
 set expandtab
 set autoindent
 
-"folding settings
-set foldmethod=indent   "fold based on indent
-set foldnestmax=3       "deepest fold is 3 levels
-set nofoldenable        "dont fold by default
+" Fold based on indent
+set foldmethod=indent
 
-set wildmode=list:longest   "make cmdline tab completion similar to bash
-set wildmenu                "enable ctrl-n and ctrl-p to scroll thru matches
-set wildignore=*.o,*.obj,*~,*.class,*/target/* "stuff to ignore when tab completing
+" Deepest fold is 3 levels
+set foldnestmax=3
 
+" Dont fold by default
+set nofoldenable
 
-"vertical/horizontal scroll off settings
+" Make cmdline tab completion similar to bash
+set wildmode=list:longest
+
+" Enable ctrl-n and ctrl-p to scroll thru matches
+set wildmenu
+
+" Stuff to ignore when tab completing
+set wildignore=*.o,*.obj,*~,*.class,*/target/*
+
+" Vertical/horizontal scroll off settings
 set scrolloff=3
 set sidescrolloff=7
 set sidescroll=1
 
+" Allow unsaved buffers to become hiden
+set hidden
 
-set hidden            "allow unsaved buffers to become hiden
-set switchbuf=useopen "jump to the window if a buffer is already opened in one
+" Jump to the window if a buffer is already opened in one
+set switchbuf=useopen
 
-"switching between current and alternate file (last one edited in the current window) (C-6 does not work on Mac)
+" Switching between current and alternate file (last one edited in the current window) (C-6 does not work on Mac)
 nmap <C-e> :e#<CR>
 
-"convenient way to open next buffer
+" Convenient way to open next buffer
 nmap <C-n> :bnext<CR>
 
-"convenient way to open previous buffer
+" Convenient way to open previous buffer
 nmap <C-p> :bprev<CR>
 
-"Toggles NERDTree
+" Toggles NERDTree
 nmap <silent> <Leader>p :NERDTreeToggle<CR>
 
-"List chars
-set list
-set listchars=""                  " Reset the listchars
-set listchars=tab:\ \             " a tab should display as "  ", trailing whitespace as "."
-set listchars+=trail:.            " show trailing spaces as dots
-set listchars+=extends:>          " The character to show in the last column when wrap is
-                                  " off and the line continues beyond the right of the screen
-set listchars+=precedes:<         " The character to show in the last column when wrap is
-                                  " off and the line continues beyond the left of the screen
 
-"remove trailing spaces when saving
+" List chars
+set list
+
+" Reset the listchars
+set listchars=""
+
+" A tab should display as "  ", trailing whitespace as "."
+set listchars=tab:\ \
+
+" Show trailing spaces as dots
+set listchars+=trail:.
+
+" The character to show in the last column when wrap is
+" off and the line continues beyond the right of the screen
+set listchars+=extends:>
+
+" The character to show in the last column when wrap is
+" off and the line continues beyond the left of the screen
+set listchars+=precedes:<
+
+
+" Remove trailing spaces when saving
 autocmd BufWritePre * :%s/\s\+$//e
 
 set background=dark
