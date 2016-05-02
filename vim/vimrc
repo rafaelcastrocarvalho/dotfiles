@@ -30,6 +30,9 @@ nmap <silent> <Leader>p :NERDTreeToggle<CR>
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t:.'
 
+" Always open a new window instead of trying to jump into an already open one
+let g:ctrlp_switch_buffer = 0
+
 " ==========================================================
 
 " Allow backspacing over everything in insert mode
@@ -101,7 +104,7 @@ set sidescroll=1
 set hidden
 
 " Jump to the window if a buffer is already opened in one
-set switchbuf=useopen
+" set switchbuf=useopen
 
 " Turn Off Swap Files
 set noswapfile
@@ -117,10 +120,10 @@ set undofile
 nmap <C-e> :e#<CR>
 
 " Convenient way to open next buffer
-nmap <C-n> :bnext<CR>
+" nmap <C-n> :bnext<CR>
 
 " Convenient way to open previous buffer
-nmap <C-p> :bprev<CR>
+" nmap <C-p> :bprev<CR>
 
 " List chars
 set list
