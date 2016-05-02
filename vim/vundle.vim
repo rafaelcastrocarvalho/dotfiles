@@ -9,7 +9,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 Plugin 'CSApprox'
 Plugin 'vim-scripts/AutoTag'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-rails'
