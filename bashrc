@@ -2,6 +2,7 @@
 
 CURRENT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 . $CURRENT_DIR/locaweb/bashrc
+. $CURRENT_DIR/aliases.sh
 
 
 # Make general bash configurations
