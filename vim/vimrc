@@ -30,6 +30,7 @@ nmap <silent> <Leader>p :NERDTreeToggle<CR>
 
 " Opens NERDTree at vim start
 autocmd VimEnter * NERDTree
+autocmd VimEnter * wincmd l
 
 " Enable Airline smarter tab line
 let g:airline#extensions#tabline#enabled = 1
