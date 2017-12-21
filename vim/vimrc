@@ -125,6 +125,9 @@ set undofile
 " Switching between current and alternate file (last one edited in the current window) (C-6 does not work on Mac)
 nmap <C-e> :e#<CR>
 
+" Maps // to search for visual selected text
+vnoremap // y/\V<C-R>"<CR>
+
 " Convenient way to open next buffer
 " nmap <C-n> :bnext<CR>
 
