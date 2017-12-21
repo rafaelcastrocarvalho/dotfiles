@@ -154,8 +154,10 @@ set listchars+=extends:>
 " off and the line continues beyond the left of the screen
 set listchars+=precedes:<
 
-" Remove trailing spaces when saving
-autocmd BufWritePre * :%s/\s\+$//e
+" Remove trailing spaces when saving but only when filetype not blacklisted
+let blacklist = ['markdown']
+autocmd BufWritePre * if index(blacklist, &ft) < 0 | %s/\s\+$//e
+
 
 set background=dark
 colorscheme jellybeans
