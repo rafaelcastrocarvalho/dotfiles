@@ -37,7 +37,7 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t:.'
 
 " Always open a new window instead of trying to jump into an already open one
-let g:ctrlp_switch_buffer = 0
+" let g:ctrlp_switch_buffer = 0
 
 " ==========================================================
 
