@@ -158,6 +158,10 @@ set listchars+=precedes:<
 let blacklist = ['markdown']
 autocmd BufWritePre * if index(blacklist, &ft) < 0 | %s/\s\+$//e
 
+" Enable fzf (command-line fuzzy finder) as a Vim Plugin
+set rtp+=/usr/local/opt/fzf
+" Toggles fzf
+nmap <C-p> :FZF<CR>
 
 set background=dark
 colorscheme jellybeans
