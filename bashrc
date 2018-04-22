@@ -20,6 +20,7 @@ export PS1="\w\[$txtylw\] \n$arrow \[$fgcolor\]"
 ### inside git project bash-prompt appearance
 GIT_PROMPT_ONLY_IN_REPO=1
 GIT_PROMPT_END="\[$txtylw\] \n$arrow \[$fgcolor\]"
+source ~/.bash-git-prompt/gitprompt.sh
 
 ## Arch
 export VISUAL="vim"
