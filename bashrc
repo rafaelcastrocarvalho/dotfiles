@@ -1,7 +1,7 @@
 # Include Locaweb specific bash configurations
 
 CURRENT_DIR="$(dirname "${BASH_SOURCE[0]}")"
-. $CURRENT_DIR/../locaweb/bashrc
+. $CURRENT_DIR/locaweb/bashrc
 . $CURRENT_DIR/aliases.sh
 
 
@@ -28,25 +28,19 @@ export VISUAL="vim"
 source /usr/share/git/completion/git-prompt.sh
 source /usr/share/git/completion/git-completion.bash
 
-source /usr/share/chruby/chruby.sh
-source /usr/share/chruby/auto.sh
-chruby ruby 2.4
-
 source $HOME/.asdf/asdf.sh
 source $HOME/.asdf/completions/asdf.bash
 
 #MAC
 
 ##Configuring chruby
-#source /usr/local/opt/chruby/share/chruby/chruby.sh
-#source /usr/local/opt/chruby/share/chruby/auto.sh     #enable auto-switching of Rubies specified by .ruby-version files
+source /usr/local/opt/chruby/share/chruby/chruby.sh
+source /usr/local/opt/chruby/share/chruby/auto.sh
+chruby ruby 2.4
 
 #export ACKRC=".ackrc"
 
-# Tmuxinator completion
-#source ~/.bin/tmuxinator.bash
-
-#if [ -f $(brew --prefix)/etc/bash_completion ]; then
-#  . $(brew --prefix)/etc/bash_completion
-#fi
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
 
