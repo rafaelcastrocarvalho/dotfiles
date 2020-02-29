@@ -141,7 +141,7 @@ set list
 set listchars=""
 
 " A tab should display as "»"
-set listchars=tab:»
+" set listchars=tab:»
 
 " Show trailing spaces as dots
 set listchars+=trail:.
@@ -159,7 +159,7 @@ let blacklist = ['markdown']
 autocmd BufWritePre * if index(blacklist, &ft) < 0 | %s/\s\+$//e
 
 " Enable fzf (command-line fuzzy finder) as a Vim Plugin
-set rtp+=/usr/local/opt/fzf
+set rtp+=~/.fzf
 " Toggles fzf
 nmap <C-p> :FZF<CR>
 
