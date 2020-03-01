@@ -28,8 +28,8 @@ export VISUAL="vim"
 source /usr/share/git/completion/git-prompt.sh
 source /usr/share/git/completion/git-completion.bash
 
-source $HOME/.asdf/asdf.sh
-source $HOME/.asdf/completions/asdf.bash
+source /opt/asdf-vm/asdf.sh
+source /opt/asdf-vm/completions/asdf.bash
 
 #MAC
 
