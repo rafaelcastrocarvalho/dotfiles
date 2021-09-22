@@ -21,14 +21,18 @@ export PS1="\w\[$txtylw\] \n$arrow \[$fgcolor\]"
 GIT_PROMPT_ONLY_IN_REPO=1
 GIT_PROMPT_END="\[$txtylw\] \n$arrow \[$fgcolor\]"
 
+## Ubuntu
+. $HOME/.asdf/asdf.sh
+. $HOME/.asdf/completions/asdf.bash
+
 ## Arch
-export VISUAL="vim"
+#export VISUAL="vim"
 
-source /usr/share/git/completion/git-prompt.sh
-source /usr/share/git/completion/git-completion.bash
+#source /usr/share/git/completion/git-prompt.sh
+#source /usr/share/git/completion/git-completion.bash
 
-source /opt/asdf-vm/asdf.sh
-source /opt/asdf-vm/completions/asdf.bash
+#source /opt/asdf-vm/asdf.sh
+#source /opt/asdf-vm/completions/asdf.bash
 
 #MAC
 
