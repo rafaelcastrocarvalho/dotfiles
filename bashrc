@@ -7,7 +7,7 @@ CURRENT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 
 # Make general bash configurations
 
-export EDITOR='vim'
+export EDITOR='nvim'
 
 ## bash-prompt appearance
 txtylw='\033[1;33m'   # Yellow
