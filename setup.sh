@@ -11,12 +11,12 @@ git config --global user.email "rafael.c.carvalho@gmail.com.br"                 
 git config --global core.editor nvim                                              && \
 git config --global merge.tool vimdiff                                            && \
 
-## Custom configs
-#if $(ps -p$$ -ocmd= | grep -q 'bash'); then
-#  ln -sf $CURRENT_DIR/inputrc ~/.inputrc
-#else
-#  echo 'bindkey -v' >> ~/.zshrc
-#fi
+# Custom configs
+if $(ps -p$$ -ocmd= | grep -q 'bash'); then
+  ln -sf $CURRENT_DIR/inputrc ~/.inputrc
+else
+  echo 'bindkey -v' >> ~/.zshrc
+fi
 
 ln -sf $CURRENT_DIR/tmux.conf ~/.tmux.conf                                        && \
 ln -sf -T $CURRENT_DIR/vim ~/.vim                                                 && \

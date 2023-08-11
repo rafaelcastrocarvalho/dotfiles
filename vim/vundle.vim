@@ -20,6 +20,9 @@ Plugin 'rking/ag.vim'
 "Plugin 'mileszs/ack.vim'
 Plugin 'bling/vim-airline'
 Plugin 'junegunn/fzf.vim'
+Plugin 'iamcco/markdown-preview.nvim'
+Plugin 'elixir-editors/vim-elixir'
+Plugin 'vim-terraform'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
