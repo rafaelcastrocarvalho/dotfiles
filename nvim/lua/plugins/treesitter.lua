@@ -17,7 +17,8 @@ return {
         'heex',
         'html',
         'javascript',
-        'lua',
+        -- 'lua' omitted: Neovim bundles a matched lua parser+queries pair;
+        -- letting nvim-treesitter manage it installs a mismatched older parser.
         'luadoc',
         'markdown',
         'markdown_inline',

@@ -32,6 +32,11 @@ vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
 end)
 
+-- Use spaces for indentation by default (2 spaces)
+vim.o.expandtab = true
+vim.o.shiftwidth = 2
+vim.o.tabstop = 2
+
 -- Enable break indent
 vim.o.breakindent = true
 
