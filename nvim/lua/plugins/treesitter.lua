@@ -34,6 +34,10 @@ return {
     config = function(_, opts)
       require('nvim-treesitter.config').setup(opts)
 
+      -- On the `main` branch `ensure_installed` in opts is ignored;
+      -- parsers must be installed explicitly (async, no-op if present).
+      require('nvim-treesitter').install(opts.ensure_installed)
+
       vim.api.nvim_create_autocmd('FileType', {
         callback = function()
           pcall(vim.treesitter.start)
