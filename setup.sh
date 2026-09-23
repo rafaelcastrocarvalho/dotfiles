@@ -7,7 +7,7 @@ source ./$CURRENT_SO/setup.sh
 
 # Git
 git config --global user.name "Rafael Carvalho"                                   && \
-git config --global user.email "rafael.c.carvalho@gmail.com.br"                   && \
+git config --global user.email "rafael.c.carvalho@gmail.com"                      && \
 git config --global core.editor nvim                                              && \
 git config --global merge.tool vimdiff                                            && \
 

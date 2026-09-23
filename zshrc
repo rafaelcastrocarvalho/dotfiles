@@ -105,20 +105,26 @@ alias nvim-lazy='NVIM_APPNAME=nvim-lazy nvim'
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
 
+
 # Global devcontainer wrapper function
 dcup() {
+  local src="$HOME/.gitconfig"
+  [ -f "$src" ] || src="${XDG_CONFIG_HOME:-$HOME/.config}/git/config"
+
   devcontainer up --workspace-folder .  \
-    --mount "type=bind,source=$HOME/.claude,target=/home/vscode/.claude" \
-    --mount "type=bind,source=$HOME/.claude.json,target=/home/vscode/.claude.json" \
-    --mount "type=bind,source=$HOME/.claude,target=/home/node/.claude" \
-    --mount "type=bind,source=$HOME/.claude.json,target=/home/node/.claude.json" \
-    --mount "type=bind,source=$SSH_AUTH_SOCK,target=/tmp/ssh-agent.sock" \
-    --remote-env "SSH_AUTH_SOCK=/tmp/ssh-agent.sock"
+    --mount "type=bind,source=$src,target=/etc/gitconfig" \
+    --mount "type=bind,source=$HOME/.claude,target=/var/lib/claude-code" \
+    --mount "type=bind,source=$HOME/.claude.json,target=/var/lib/claude-code/.claude.json" \
+    --remote-env "CLAUDE_CONFIG_DIR=/var/lib/claude-code" \
+    --mount "type=bind,source=$SSH_AUTH_SOCK,target=/run/ssh-agent.sock" \
+    --remote-env "SSH_AUTH_SOCK=/run/ssh-agent.sock" \
+    "$@"
 }
 
 # Add this alongside your dcup function in ~/.bashrc or ~/.zshrc
 dcexec() {
   devcontainer exec --workspace-folder . \
-    --remote-env "SSH_AUTH_SOCK=/tmp/ssh-agent.sock" \
+    --remote-env "SSH_AUTH_SOCK=/run/ssh-agent.sock" \
+    --remote-env "CLAUDE_CONFIG_DIR=/var/lib/claude-code" \
     "$@"
 }

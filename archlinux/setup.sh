@@ -8,4 +8,4 @@ sudo pacman -S --needed base-devel neovim git fzf tmux emacs docker postgresql  
 
 git clone https://aur.archlinux.org/paru.git ~/dev/open-source/paru               && \
 cd ~/dev/open-source/paru && makepkg -si                                          && \
-paru -S --needed asdf-vm                                                          && \
+paru -S --needed asdf-vm

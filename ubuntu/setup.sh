@@ -15,6 +15,6 @@ git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf                  
 setxkbmap -option 'caps:ctrl_modifier'                                            && \
 xcape -e 'Caps_Lock=Escape'                                                       && \
 setxkbmap -option 'caps:ctrl_modifier'                                            && \
-xcape -e 'Caps_Lock=Escape;Control_L=Escape;Control_R=Escape'                     && \
+xcape -e 'Caps_Lock=Escape;Control_L=Escape;Control_R=Escape'
 
 
