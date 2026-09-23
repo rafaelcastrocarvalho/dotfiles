@@ -22,6 +22,19 @@ die()  { printf '%serror:%s %s\n' "$_c_red"   "$_c_reset" "$*" >&2; exit 1; }
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
+# Run a command with root privileges. Containers usually already are root and
+# often have no sudo at all, so reaching for sudo unconditionally is what makes
+# a bootstrap script container-hostile.
+as_root() {
+  if [[ $EUID -eq 0 ]]; then
+    run "$@"
+  elif have sudo; then
+    run sudo "$@"
+  else
+    die "need root to run: $* (not root, and sudo is not installed)"
+  fi
+}
+
 # Print $HOME-relative paths as ~/... so log lines stay short.
 tilde() { printf '%s' "${1/#$HOME/\~}"; }
 

@@ -142,8 +142,10 @@ Not part of this migration, tracked so they do not get lost:
 - **`~/.docker`, `~/.aws`, `~/.cargo`, `~/.asdf`** — could follow XDG, but they
   hold credentials or installed runtimes. Moving them is a data migration, not
   a config change, and needs its own step.
-- **Phase 3** — container and devcontainer profiles, plus the `install.sh`
-  entrypoint. `20-aur` already skips itself as root and `10-packages` skips a
-  system without pacman, but there is no Debian path yet.
 - **Phase 4** — CI: shellcheck, plus a from-scratch Arch and Debian build that
-  runs `setup.sh` and asserts the result.
+  runs `setup.sh` and asserts the result. Phase 3 was verified by hand in a
+  clean `debian:stable-slim` container; CI is what keeps it verified.
+
+Phase 3 is done: `./install.sh` bootstraps a Debian container end to end,
+including replacing Debian's Neovim 0.10 with the upstream build. See the
+"Containers and devcontainers" section of `README.md`.

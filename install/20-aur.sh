@@ -1,22 +1,29 @@
 #!/usr/bin/env bash
 #
-# Bootstrap paru and install the AUR packages listed in packages/aur.txt.
+# Bootstrap paru and install the AUR packages listed in packages/pacman/aur.txt.
 
 set -euo pipefail
 # shellcheck source=../lib/common.sh
 source "$DOTFILES/lib/common.sh"
+# shellcheck source=../lib/detect.sh
+source "$DOTFILES/lib/detect.sh"
 
 log "AUR packages"
 
 if ! have pacman; then
-  skip "no pacman on this system"
+  skip "not an Arch system"
+  exit 0
+fi
+
+# makepkg refuses to run as root by design, and containers are usually root, so
+# there is no way to build an AUR helper there. Skipping is the honest outcome.
+if [[ $(detect_profile) == container ]]; then
+  skip "container profile -- AUR builds need a non-root user"
   exit 0
 fi
 
 if ! have paru; then
   if [[ $EUID -eq 0 ]]; then
-    # makepkg refuses to run as root by design, so there is no way to build an
-    # AUR helper here. Containers land on this branch; phase 3 makes it explicit.
     warn "running as root -- makepkg cannot build paru, skipping AUR"
     exit 0
   fi
@@ -33,9 +40,15 @@ if ! have paru; then
   fi
 fi
 
-mapfile -t pkgs < <(grep -vE '^[[:space:]]*(#|$)' "$DOTFILES/packages/aur.txt")
+list=$(package_list aur)
+if [[ -z $list ]]; then
+  skip "no packages/pacman/aur.txt"
+  exit 0
+fi
+
+mapfile -t pkgs < <(grep -vE '^[[:space:]]*(#|$)' "$list")
 if [[ ${#pkgs[@]} -eq 0 ]]; then
-  skip "packages/aur.txt is empty"
+  skip "aur.txt is empty"
   exit 0
 fi
 

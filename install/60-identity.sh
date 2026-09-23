@@ -14,6 +14,13 @@ git_dir="${XDG_CONFIG_HOME:-$HOME/.config}/git"
 local_config="$git_dir/config.local"
 name="" email=""
 
+# `dcup` bind-mounts the host's git config at /etc/gitconfig, so inside a
+# container the identity is already there and prompting for it would be wrong.
+if [[ -r /etc/gitconfig ]] && git config --file /etc/gitconfig user.email >/dev/null 2>&1; then
+  skip "identity comes from /etc/gitconfig ($(git config --file /etc/gitconfig user.email))"
+  exit 0
+fi
+
 # A plain ~/.gitconfig takes precedence over ~/.config/git/config, so it would
 # silently shadow everything this repo sets. Carry the identity over and move it
 # aside rather than leaving two configs fighting.

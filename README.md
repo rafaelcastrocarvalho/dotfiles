@@ -46,8 +46,9 @@ The steps:
 
 | Step | Does |
 | --- | --- |
-| `10-packages` | `pacman -S --needed` everything in `packages/base.txt` |
-| `20-aur` | Bootstraps paru, installs `packages/aur.txt` |
+| `10-packages` | Installs `packages/<manager>/base.txt` via pacman or apt |
+| `15-nvim-release` | Installs Neovim from upstream if the packaged one is < 0.11 |
+| `20-aur` | Bootstraps paru, installs `packages/pacman/aur.txt` |
 | `30-shell` | Installs oh-my-zsh, makes zsh the login shell |
 | `40-link` | Symlinks every package in `pkg/` into `$HOME` |
 | `50-nvim` | `nvim --headless "+Lazy! restore"` — restores the pinned plugin set |
@@ -110,11 +111,50 @@ into the container rather than mounting key material.
 When `40-link` finds a real file where a symlink should go, it moves it to
 `<file>.backup.<timestamp>` instead of deleting it.
 
+## Containers and devcontainers
+
+`install.sh` is the entry point VS Code Dev Containers and GitHub Codespaces
+look for. Point them at it:
+
+```jsonc
+// devcontainer.json
+"dotfiles": {
+  "repository": "https://github.com/<you>/dotfiles",
+  "installCommand": "install.sh"
+}
+```
+
+It runs `setup.sh --profile container`. Or by hand: `./install.sh`, or
+`./setup.sh --profile container`.
+
+Two axes decide what happens, kept separate on purpose:
+
+| | Values | Decides |
+| --- | --- | --- |
+| **profile** | `workstation`, `container` | which **steps** run |
+| **manager** | `pacman`, `apt` | which **package list** is used |
+
+They are independent, so an Arch container uses the pacman list and still skips
+the AUR without needing a special case. The profile is detected from
+`/.dockerenv`, `/run/.containerenv`, `$REMOTE_CONTAINERS`, `$CODESPACES` and
+`$DEVCONTAINER`; `--profile` overrides it.
+
+In the container profile:
+
+- The AUR is skipped — `makepkg` refuses to run as root by design.
+- `chsh` is skipped — set the shell in `devcontainer.json` instead.
+- `sudo` is only used when not already root, so a root container with no sudo
+  installed still works.
+- Git identity is taken from `/etc/gitconfig` if something mounted it there
+  (which is what the `dcup` function does), otherwise from `$GIT_AUTHOR_NAME`
+  and `$GIT_AUTHOR_EMAIL`. It never blocks on a prompt.
+- `packages/apt/base.txt` is deliberately leaner: no docker, no postgresql
+  server, nothing the image or host already provides.
+
+Debian stable ships Neovim 0.10, and this config needs 0.11 (`vim.hl.on_yank`),
+so `15-nvim-release` replaces it with the official build. On Arch it is a no-op.
+
 ## Requirements
 
-Arch Linux, `sudo`, and an SSH key in `~/.ssh` if you clone over SSH.
-
-Containers are not supported yet: `20-aur` skips itself as root because
-`makepkg` refuses to run there, and `10-packages` skips any system without
-pacman, but there is no Debian path and no `install.sh` entrypoint. That is
-phase 3.
+Arch Linux or a Debian/Ubuntu container. `sudo` only if you are not root, and
+an SSH key in `~/.ssh` if you clone over SSH.
