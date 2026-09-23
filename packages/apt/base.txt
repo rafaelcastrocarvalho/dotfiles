@@ -23,6 +23,11 @@ jq
 unzip
 tmux
 
+# nvim-treesitter tracks its `main` branch, which shells out to the tree-sitter
+# CLI to build each parser. Without it every parser fails with ENOENT and you
+# get no syntax highlighting.
+tree-sitter-cli
+
 # Debian stable ships neovim 0.10, and this config needs 0.11 or newer
 # (vim.hl.on_yank). install/15-nvim-release.sh replaces it with the official
 # build; it is listed here only so a too-old nvim is never simply missing.

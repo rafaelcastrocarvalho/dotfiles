@@ -26,10 +26,24 @@ fi
 mapfile -t pkgs < <(grep -vE '^[[:space:]]*(#|$)' "$list")
 [[ ${#pkgs[@]} -gt 0 ]] || die "$list is empty"
 
+# A container has no one to answer a prompt.
+yes_flag=()
+[[ $(detect_profile) == container ]] && yes_flag=(--noconfirm)
+
 case $manager in
   pacman)
+    # A fresh Arch container ships with an empty sync database, so -S cannot
+    # resolve a single package. Populating it needs -Sy, and -Sy without -u is
+    # the classic partial-upgrade footgun -- packages built against libraries
+    # newer than the installed ones. So when the database is missing, do a full
+    # -Syu, which is the only safe way to get there.
+    if ! compgen -G '/var/lib/pacman/sync/*.db' >/dev/null; then
+      log "no pacman sync database -- syncing and upgrading first"
+      as_root pacman -Syu "${yes_flag[@]}"
+    fi
+
     # --needed makes this a no-op for anything already installed.
-    as_root pacman -S --needed "${pkgs[@]}"
+    as_root pacman -S --needed "${yes_flag[@]}" "${pkgs[@]}"
     ;;
   apt)
     export DEBIAN_FRONTEND=noninteractive

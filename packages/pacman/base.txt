@@ -18,5 +18,10 @@ fd
 jq
 unzip
 
+# nvim-treesitter tracks its `main` branch, which shells out to the tree-sitter
+# CLI to build each parser. Without it every parser fails with ENOENT and you
+# get no syntax highlighting.
+tree-sitter-cli
+
 docker
 postgresql
