@@ -1,0 +1,22 @@
+# Packages installed by install/10-packages.sh, one per line.
+# Blank lines and # comments are ignored.
+
+base-devel
+git
+neovim
+tmux
+
+# zsh was missing before: the shell config assumed it was already there.
+zsh
+bash-completion
+
+# fzf and ripgrep/fd back telescope's find_files and live_grep.
+fzf
+ripgrep
+fd
+
+jq
+unzip
+
+docker
+postgresql

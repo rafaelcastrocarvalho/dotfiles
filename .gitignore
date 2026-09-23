@@ -1,0 +1,5 @@
+# Machine-local overrides are generated, never tracked.
+*.local
+
+# Backups the linker makes when it displaces a file it did not create.
+*.backup.*

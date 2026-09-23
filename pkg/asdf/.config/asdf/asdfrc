@@ -1,0 +1,3 @@
+# Linked to ~/.asdfrc by install/40-link.sh.
+# Read versions from .ruby-version, .nvmrc and friends, not only .tool-versions.
+legacy_version_file = yes
