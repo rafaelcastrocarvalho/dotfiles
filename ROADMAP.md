@@ -102,9 +102,9 @@ is exactly how the treesitter failure hid.
 
 ## Environment gotchas
 
-- **Never run a bare `tmux kill-server`.** The session runs inside tmux; use a
-  dedicated socket: `tmux -L test -f <conf> new-session -d && tmux -L test
-  kill-server`.
+- **Never run a bare `tmux kill-server`.** It hits whatever server is already
+  running, which is somebody's live sessions. Always use a dedicated socket:
+  `tmux -L test -f <conf> new-session -d && tmux -L test kill-server`.
 - **Debian stable ships Neovim 0.10**, this config needs 0.11
   (`vim.hl.on_yank`). `15-nvim-release` handles it.
 - **A fresh Arch image has an empty pacman sync database.** `pacman -S` finds
