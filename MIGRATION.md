@@ -104,7 +104,10 @@ elixir --version               # -> 1.19.3, i.e. the shims still resolve
 d=$(mktemp -d) && echo 3.4.7 > "$d/.ruby-version" && (cd "$d" && asdf current ruby)
                                # -> Source must be that .ruby-version,
                                #    not ~/.tool-versions
-bind -v | grep editing-mode    # bash: -> set editing-mode vi
+bash -ic 'bind -v' 2>/dev/null | grep editing-mode
+                               # -> set editing-mode vi
+                               #    `bind` is a bash builtin; zsh has no such
+                               #    command, so this one has to run in bash
 
 # Identity survived the ~/.gitconfig move
 git config --get user.email    # -> rafael.c.carvalho@gmail.com
@@ -120,11 +123,17 @@ tmux -L check -f ~/.config/tmux/tmux.conf new-session -d && \
 > `tmux kill-server`: it hits whatever server is already running, which is
 > your live sessions in other terminals.
 
-Then check `$HOME` got quieter:
+Then count `$HOME`:
 
 ```sh
-ls -A ~ | grep -c '^\.'        # was 109
+ls -A ~ | grep -c '^\.'
 ```
+
+It was 109 before the run and reads **110** right after it, which is correct
+and not a failure: three backups and the new `~/.zshenv` arrive, `~/.oh-my-zsh`
+leaves, and `.zshrc`/`.gitconfig` each swap for their own backup. It drops to
+106 once step 4 removes the four orphans, and to 103 when you delete the three
+backups.
 
 ## 6. Rollback
 
