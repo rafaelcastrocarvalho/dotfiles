@@ -97,6 +97,13 @@ echo "[$DOTFILES_CONTAINER]"   # -> [] — the prompt badge is containers only
 # Config landed in XDG paths
 echo $ASDF_CONFIG_FILE         # -> ~/.config/asdf/asdfrc
 asdf info | grep CONFIG_FILE   # -> same path
+elixir --version               # -> 1.19.3, i.e. the shims still resolve
+
+# legacy_version_file is only in effect if that file is actually readable, and
+# asdf says nothing when it is not. Prove it instead of trusting the variable:
+d=$(mktemp -d) && echo 3.4.7 > "$d/.ruby-version" && (cd "$d" && asdf current ruby)
+                               # -> Source must be that .ruby-version,
+                               #    not ~/.tool-versions
 bind -v | grep editing-mode    # bash: -> set editing-mode vi
 
 # Identity survived the ~/.gitconfig move

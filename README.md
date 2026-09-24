@@ -16,9 +16,10 @@ how you apply updates; every step is a no-op when there is nothing to do.
 ## What it sets up
 
 Neovim (kickstart-based, plugins pinned by `lazy-lock.json`), zsh with
-oh-my-zsh, bash, tmux, git, readline and asdf. asdf comes from the AUR, so it
-is installed on Arch only — a Debian container gets its config but not the
-binary.
+oh-my-zsh, bash, tmux, git, readline and asdf. asdf comes from the AUR, so
+only a workstation gets the binary: containers skip the AUR entirely (`makepkg`
+refuses to run as root) and the apt list has no asdf either. Its config is
+linked everywhere regardless.
 
 ## Usage
 

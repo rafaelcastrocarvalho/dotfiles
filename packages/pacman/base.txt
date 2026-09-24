@@ -24,4 +24,3 @@ unzip
 tree-sitter-cli
 
 docker
-postgresql

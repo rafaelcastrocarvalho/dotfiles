@@ -1,3 +1,6 @@
-# Linked to ~/.asdfrc by install/40-link.sh.
+# Linked to ~/.config/asdf/asdfrc by install/40-link.sh, and found there only
+# because shell/env.sh exports ASDF_CONFIG_FILE. Without that link asdf falls
+# back to its defaults silently -- no error, legacy version files just stop
+# being read.
 # Read versions from .ruby-version, .nvmrc and friends, not only .tool-versions.
 legacy_version_file = yes
