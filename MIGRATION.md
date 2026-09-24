@@ -110,7 +110,8 @@ tmux -L check -f ~/.config/tmux/tmux.conf new-session -d && \
 ```
 
 > The `-L check` above gives tmux its own socket. Never run a bare
-> `tmux kill-server` — it kills the server your session is running in.
+> `tmux kill-server`: it hits whatever server is already running, which is
+> your live sessions in other terminals.
 
 Then check `$HOME` got quieter:
 
@@ -139,24 +140,8 @@ untouched.
 
 ## 7. Still open
 
-Not part of this migration, tracked so they do not get lost:
-
-- **`lua/kickstart/plugins/`** — five files (autopairs, debug, indent_line,
-  lint, mini) that `init.lua` never imports. Deferred pending your review of
-  each plugin. While they stay unimported, `vim.o.showmode = false` runs with
-  no statusline to show the mode.
-- **`pkg/nvim/.config/nvim/.tool-versions`** — pins lua/python/php/julia inside
-  the Neovim config directory. Looks like a stray `asdf set`; nothing in the
-  config needs PHP or Julia.
-- **`~/.docker`, `~/.aws`, `~/.cargo`, `~/.asdf`** — could follow XDG, but they
-  hold credentials or installed runtimes. Moving them is a data migration, not
-  a config change, and needs its own step.
-- **Phase 4** — CI: shellcheck, plus a from-scratch Arch and Debian build that
-  runs `setup.sh` and asserts the result. Phase 3 was verified by hand in a
-  clean `debian:stable-slim` container; CI is what keeps it verified.
-
-Phase 3 is done: `./install.sh` bootstraps a Debian container end to end,
-including replacing Debian's Neovim 0.10 with the upstream build. On top of it,
-`dcup` now gives a local devcontainer the same config as the host without
-cloning anything. See the "Containers and devcontainers" section of
-`README.md`.
+Everything not part of this migration lives in `ROADMAP.md` — the deferred
+decisions (the unimported `kickstart/plugins/`, the stray `.tool-versions`,
+whether `~/.docker` and friends follow XDG), phase 4 (CI) and phase 5. It is
+kept there on purpose: this file gets deleted once the migration is done, and
+that list has to outlive it.
