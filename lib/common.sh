@@ -15,8 +15,18 @@ else
 fi
 
 log()  { printf '%s==>%s %s\n'   "$_c_blue"   "$_c_reset" "$*"; }
-ok()   { printf '%s  ok%s %s\n'  "$_c_green"  "$_c_reset" "$*"; }
 skip() { printf '%s  --%s %s\n'  "$_c_dim"    "$_c_reset" "$*"; }
+
+# Steps phrase their ok() as an accomplished fact ("14 packages ensured"), so
+# printing it verbatim under --dry-run states something that did not happen.
+# Same message, marker that cannot be misread.
+ok() {
+  if [[ ${DRY_RUN:-0} == 1 ]]; then
+    printf '%s  ~~ (dry run)%s %s\n' "$_c_dim" "$_c_reset" "$*"
+  else
+    printf '%s  ok%s %s\n' "$_c_green" "$_c_reset" "$*"
+  fi
+}
 warn() { printf '%s  !!%s %s\n'  "$_c_yellow" "$_c_reset" "$*" >&2; }
 die()  { printf '%serror:%s %s\n' "$_c_red"   "$_c_reset" "$*" >&2; exit 1; }
 
