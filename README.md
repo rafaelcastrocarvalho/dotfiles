@@ -35,8 +35,8 @@ binary.
 ```
 setup.sh          Orchestrator. Runs each install/ step in order; does no work itself.
 install.sh        Entry point for Codespaces and devcontainers -> setup.sh --profile container.
-lib/              common.sh (logging, dry-run), detect.sh (profile and package
-                  manager) and link.sh (the symlink farm).
+lib/              common.sh (log/ok/skip/warn/die, have, as_root, run, stamp),
+                  detect.sh (profile, package manager) and link.sh (the farm).
 install/          Numbered, idempotent steps. Each runs standalone.
 packages/         Package lists as data, one per line.
 pkg/              The symlink farm. Each subdirectory mirrors $HOME.
@@ -217,3 +217,77 @@ that and tells you to recreate it with `dcup --remove-existing-container`.
 
 Arch Linux or a Debian/Ubuntu container. `sudo` only if you are not root, and
 an SSH key in `~/.ssh` if you clone over SSH.
+
+## Gotchas
+
+- **Never run a bare `tmux kill-server`.** It hits whatever server is already
+  running, which is somebody's live sessions. Give it its own socket instead:
+  `tmux -L test -f <conf> new-session -d && tmux -L test kill-server`.
+- **A fresh Arch image has an empty pacman sync database**, so `pacman -S`
+  resolves nothing. `10-packages` runs a full `-Syu` when the database is
+  missing — `-Sy` on its own is the partial-upgrade footgun.
+- **nvim-treesitter tracks its `main` branch**, which shells out to the
+  `tree-sitter` CLI and installs asynchronously. A plain headless `+qa` exits
+  before a single parser is built, which is why `50-nvim` drives
+  `lib/nvim-treesitter-sync.lua` and waits on it.
+
+## What is left
+
+### CI
+
+Nothing here is tested automatically, and the case for fixing that is
+empirical: this restructure shipped three bugs that only showed up in a clean
+environment, and one of them was called verified before it was.
+
+1. `.github/workflows/ci.yml`, on push and on a weekly `schedule`.
+2. **Lint**: `shellcheck -x` over `setup.sh install.sh lib/*.sh install/*.sh
+   shell/*.sh`, plus `shfmt -d`. shellcheck on its own would have caught the
+   dangling `&& \` that left package installation dead for months. The files
+   in `shell/` are sourced rather than executed, so they carry no shebang —
+   pass `-s bash` for those or every one of them fails SC2148.
+3. **Arch job**: `container: archlinux`, run `./setup.sh`, then assert: exit 0,
+   the 8 symlinks resolve, `nvim --headless +q` exits 0, `zsh -ic exit` exits
+   0, and more than 15 parser `.so` files exist.
+4. **Debian job**: `container: debian:stable-slim`, run `./install.sh`, the
+   same assertions plus `nvim` >= 0.11, which is what proves `15-nvim-release`
+   fired.
+5. **Idempotency**: run the bootstrap twice and fail if the second run emits a
+   single `ok` line from `40-link`.
+
+Assert on artifacts — files exist, binaries run — never on an error string
+being absent from a log, and never filter that log down to the script's own
+log prefixes. That is exactly how a Treesitter failure stayed hidden through a
+phase that had been declared verified.
+
+### Ideas, not decisions
+
+- **mise instead of asdf.** asdf works, but mise reads the same
+  `.tool-versions`, is one binary with no shims, and covers env vars and tasks
+  as well. Would also mean handling `ASDF_DATA_DIR`.
+- **tmux.** `default-terminal "tmux-256color"` and `terminal-features ":RGB"`
+  for truecolour and undercurl. Also `bind-key a send-keys C-b` looks like it
+  was meant to be `send-prefix`.
+- **A cache volume for devcontainers.** `dcup` pays for the package install
+  and the parser build in every new container. A named volume holding
+  `~/.local/share/nvim` and the oh-my-zsh clone would make every container
+  after the first nearly free. Deferred on purpose: a parser `.so` is compiled
+  against the image's glibc, so one volume shared across image families would
+  hand a bookworm-built parser to an Alpine container. The volume name has to
+  be scoped per family first.
+- **`setup.sh --check`** — a doctor that reports drift between `$HOME` and the
+  repo (broken symlinks, missing packages, a real file where a link belongs)
+  without changing anything.
+
+### Undecided
+
+- **`pkg/nvim/.config/nvim/lua/kickstart/plugins/`** — five files (autopairs,
+  debug, indent_line, lint, mini) that `init.lua` never imports. While they
+  stay unimported, `vim.o.showmode = false` runs with no statusline to show
+  the mode, and `nvim-lint` is configured but never runs. Either add
+  `{ import = "kickstart.plugins" }` to the lazy spec or delete the directory.
+- **`pkg/nvim/.config/nvim/.tool-versions`** — pins lua/python/php/julia inside
+  the Neovim config directory. Looks like a stray `asdf set`; nothing there
+  needs PHP or Julia.
+- **`~/.docker`, `~/.aws`, `~/.cargo`, `~/.asdf`** — could follow XDG, but they
+  hold credentials or installed runtimes. That is a data migration with a real
+  `mv`, not a config change.

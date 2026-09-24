@@ -137,11 +137,3 @@ git checkout master
 
 The branch `refactor/dotfiles-redesign` holds every phase; `master` is
 untouched.
-
-## 7. Still open
-
-Everything not part of this migration lives in `ROADMAP.md` — the deferred
-decisions (the unimported `kickstart/plugins/`, the stray `.tool-versions`,
-whether `~/.docker` and friends follow XDG), phase 4 (CI) and phase 5. It is
-kept there on purpose: this file gets deleted once the migration is done, and
-that list has to outlive it.
