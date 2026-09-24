@@ -43,6 +43,14 @@ Handled automatically:
 | `~/.oh-my-zsh` | Moved to `~/.local/share/oh-my-zsh` (moved, not re-cloned, so custom plugins survive). |
 | `~/.config/nvim` | Already correct — skipped. |
 
+Your current `~/.zshrc` defines `dcup` and `dcexec` inline, so backing it up
+hands both over to the repo's versions in `shell/functions.sh`. They do more
+than the old ones: they bind-mount this repo into the container at `/dotfiles`,
+run the bootstrap there, and forward `TERM`/`COLORTERM`. The first `dcup` in a
+project therefore takes minutes rather than seconds. Containers that already
+exist were created without the mount and cannot gain it — recreate them with
+`dcup --remove-existing-container`.
+
 Created:
 
 ```
@@ -84,6 +92,7 @@ echo $DOTFILES                 # -> /home/rafael/dev/personal/dotfiles
 echo $ZDOTDIR                  # -> ~/.config/zsh
 type dcup                      # -> function
 glog -1                        # -> the alias works
+echo "[$DOTFILES_CONTAINER]"   # -> [] — the prompt badge is containers only
 
 # Config landed in XDG paths
 echo $ASDF_CONFIG_FILE         # -> ~/.config/asdf/asdfrc
@@ -147,5 +156,7 @@ Not part of this migration, tracked so they do not get lost:
   clean `debian:stable-slim` container; CI is what keeps it verified.
 
 Phase 3 is done: `./install.sh` bootstraps a Debian container end to end,
-including replacing Debian's Neovim 0.10 with the upstream build. See the
-"Containers and devcontainers" section of `README.md`.
+including replacing Debian's Neovim 0.10 with the upstream build. On top of it,
+`dcup` now gives a local devcontainer the same config as the host without
+cloning anything. See the "Containers and devcontainers" section of
+`README.md`.

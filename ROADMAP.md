@@ -6,9 +6,12 @@ up cold.
 
 ## Where things stand
 
-Branch `refactor/dotfiles-redesign`, 7 commits ahead of `master`, not merged:
+Branch `refactor/dotfiles-redesign`, 10 commits ahead of `master`, not merged:
 
 ```
+481a798  feat: devcontainers get the host's config, not a bare image
+3d7f076  docs: correct the tmux caveat in ROADMAP
+e97f842  docs: add ROADMAP with the remaining phases
 55bc5f9  chore(nvim): bump lazy.nvim
 edc1924  fix: make the container bootstrap actually reach a working editor
 2f7508d  feat: support containers and devcontainers          phase 3
@@ -18,8 +21,14 @@ f089ece  refactor: drop vim, spacemacs and ubuntu legacy     phase 1
 d961d64  fix: repair broken bootstrap, sync zshrc            phase 0
 ```
 
-266 tracked files became 55. Phases 0-3 are done and verified. The author's
-machine has **not** been migrated yet — see `MIGRATION.md`.
+266 tracked files became 56. Phases 0-3 are done and verified, and `481a798`
+builds on them: a devcontainer now gets the host's config through a bind-mount
+instead of a clone, `dcup` refuses to fail quietly, and a container prompt
+carries an orange badge naming the project.
+
+The author's machine has **not** been migrated yet — see `MIGRATION.md`. Until
+it is, the `dcup` that actually runs is the old one defined inline in the live
+`~/.zshrc`, so none of the devcontainer work is in effect on the host.
 
 ## Architecture in one screen
 
@@ -60,6 +69,8 @@ it" to "the build went red".
 2. **Lint job**: `shellcheck -x` over `setup.sh install.sh lib/*.sh
    install/*.sh shell/*.sh`, plus `shfmt -d`. shellcheck alone would have
    caught the dangling `&& \` that left package installation dead for months.
+   `shell/*.sh` are sourced, not executed, so they have no shebang: pass
+   `-s bash` for those or every one of them fails SC2148.
 3. **Arch job**: `container: archlinux`, run `./setup.sh`, then assert —
    exit 0; the 8 symlinks resolve; `nvim --headless +q` exits 0;
    `zsh -ic exit` exits 0; parser `.so` count > 15.
@@ -121,3 +132,9 @@ is exactly how the treesitter failure hid.
 - **nvim-treesitter's `main` branch needs the `tree-sitter` CLI** to build
   parsers, and its `install()` is async — a plain headless `+qa` exits before
   anything is built.
+- **`devcontainer exec` starts the shell with `TERM=xterm`**, whose terminfo
+  claims 8 colours. zsh checks terminfo and silently drops any 256-colour
+  prompt escape; bash never checks, which is why the same prompt badge worked
+  in one shell and not the other. Neovim renders washed out for the same
+  reason. `dcexec` forwards `TERM` and `COLORTERM`, and the badge is written
+  with raw escapes rather than `%K{208}`.

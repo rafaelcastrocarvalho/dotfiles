@@ -16,7 +16,9 @@ how you apply updates; every step is a no-op when there is nothing to do.
 ## What it sets up
 
 Neovim (kickstart-based, plugins pinned by `lazy-lock.json`), zsh with
-oh-my-zsh, bash, tmux, git, readline and asdf.
+oh-my-zsh, bash, tmux, git, readline and asdf. asdf comes from the AUR, so it
+is installed on Arch only — a Debian container gets its config but not the
+binary.
 
 ## Usage
 
@@ -25,13 +27,16 @@ oh-my-zsh, bash, tmux, git, readline and asdf.
 ./setup.sh --dry-run    # print what would change, touch nothing
 ./setup.sh --list       # list the steps
 ./setup.sh --only 40    # run just the symlink step
+./setup.sh --profile container   # force the container step set
 ```
 
 ## Layout
 
 ```
 setup.sh          Orchestrator. Runs each install/ step in order; does no work itself.
-lib/              common.sh (logging, dry-run) and link.sh (the symlink farm).
+install.sh        Entry point for Codespaces and devcontainers -> setup.sh --profile container.
+lib/              common.sh (logging, dry-run), detect.sh (profile and package
+                  manager) and link.sh (the symlink farm).
 install/          Numbered, idempotent steps. Each runs standalone.
 packages/         Package lists as data, one per line.
 pkg/              The symlink farm. Each subdirectory mirrors $HOME.
@@ -51,7 +56,7 @@ The steps:
 | `20-aur` | Bootstraps paru, installs `packages/pacman/aur.txt` |
 | `30-shell` | Installs oh-my-zsh, makes zsh the login shell |
 | `40-link` | Symlinks every package in `pkg/` into `$HOME` |
-| `50-nvim` | `nvim --headless "+Lazy! restore"` — restores the pinned plugin set |
+| `50-nvim` | Restores the pinned plugin set, then builds the Treesitter parsers |
 | `60-identity` | Writes `~/.config/git/config.local` with your name and email |
 
 ## Adding a config
@@ -139,6 +144,10 @@ devcontainer up --workspace-folder . \
 
 ### A devcontainer on your own machine (devcontainer CLI)
 
+`dcup` and `dcexec` are shell functions from `shell/functions.sh`, so they
+exist once this repo's shell config is in place — before that, whatever `dcup`
+your old rc file defines is the one that runs.
+
 The repo is already on the host, so cloning it again only hides your local
 edits. `dcup` bind-mounts it at `/dotfiles` and runs the bootstrap inside:
 
@@ -164,7 +173,9 @@ falls back to `/.dockerenv` and `/run/.containerenv`.
 `dcexec` also forwards `TERM` and `COLORTERM`. Left alone, `devcontainer exec`
 starts the shell with `TERM=xterm`, whose terminfo advertises 8 colours: zsh
 then drops every 256-colour prompt escape it is given, and Neovim renders its
-colourscheme washed out.
+colourscheme washed out. It forwards whatever the host has, so a terminal whose
+terminfo entry the image lacks — `alacritty` and `ghostty` are not in Debian's
+ncurses — wants `TERM=xterm-256color dcexec …` instead.
 
 The CLI is not the VS Code extension: it copies no `~/.gitconfig` and forwards
 no ssh-agent. `dcup` does both by hand, and skips any mount whose source the
@@ -198,6 +209,9 @@ dcexec /dotfiles/setup.sh --only 40
 Debian stable ships Neovim 0.10, and this config needs 0.11 (`vim.hl.on_yank`),
 so `15-nvim-release` replaces it with the official build. On Arch it is a no-op.
 
+A mount can only be set when a container is created, so a container that came
+up before any of this has no `/dotfiles` and cannot gain one. `dcup` detects
+that and tells you to recreate it with `dcup --remove-existing-container`.
 
 ## Requirements
 
