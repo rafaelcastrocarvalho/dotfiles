@@ -56,6 +56,7 @@ The steps:
 | `15-nvim-release` | Installs Neovim from upstream if the packaged one is < 0.11 |
 | `20-aur` | Bootstraps paru, installs `packages/pacman/aur.txt` |
 | `30-shell` | Installs oh-my-zsh, makes zsh the login shell |
+| `35-history` | Moves shell and REPL history into `$XDG_STATE_HOME` |
 | `40-link` | Symlinks every package in `pkg/` into `$HOME` |
 | `50-nvim` | Restores the pinned plugin set, then builds the Treesitter parsers |
 | `60-identity` | Writes `~/.config/git/config.local` with your name and email |
@@ -95,8 +96,14 @@ hardcodes it, and `~/.zshenv`, because zsh reads it before `ZDOTDIR` exists.
 
 `shell/env.sh` also points history and cache files at `$XDG_STATE_HOME` and
 `$XDG_CACHE_HOME` — shell history, `zcompdump`, and the REPL histories for
-psql, mysql, sqlite, redis, node and python. Only files that regenerate
-themselves are relocated, so nothing breaks if an old one is never migrated.
+psql, mysql, sqlite, redis, node and python.
+
+History is data, not cache — pointing a variable at a new path does not move
+the file, and a shell that starts empty looks exactly like a shell that lost
+its history. `35-history` moves the files that already exist. Where both an
+old and a new one are there it reports and leaves both alone: two history
+files can overlap, and concatenating them blindly duplicates whatever does.
+Caches like `zcompdump` are left to regenerate, which is what they are for.
 Config holding credentials (`~/.docker`, `~/.aws`) is deliberately left alone:
 moving that is a data migration, not a config change.
 

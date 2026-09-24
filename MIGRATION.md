@@ -42,6 +42,7 @@ Handled automatically:
 | `~/.gitconfig` | Identity copied to `config.local`, then backed up. |
 | `~/.oh-my-zsh` | Moved to `~/.local/share/oh-my-zsh` (moved, not re-cloned, so custom plugins survive). |
 | `~/.config/nvim` | Already correct — skipped. |
+| `~/.zsh_history`, `~/.bash_history`, the REPL histories | Moved into `$XDG_STATE_HOME` by `35-history`, so the new shell opens with the old history. |
 
 Your current `~/.zshrc` defines `dcup` and `dcexec` inline, so backing it up
 hands both over to the repo's versions in `shell/functions.sh`. They do more
@@ -98,6 +99,7 @@ echo "[$DOTFILES_CONTAINER]"   # -> [] — the prompt badge is containers only
 echo $ASDF_CONFIG_FILE         # -> ~/.config/asdf/asdfrc
 asdf info | grep CONFIG_FILE   # -> same path
 elixir --version               # -> 1.19.3, i.e. the shims still resolve
+wc -l $HISTFILE                # -> your real history, not a fresh file
 
 # legacy_version_file is only in effect if that file is actually readable, and
 # asdf says nothing when it is not. Prove it instead of trusting the variable:
