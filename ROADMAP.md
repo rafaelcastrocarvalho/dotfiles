@@ -80,6 +80,14 @@ is exactly how the treesitter failure hid.
 - **tmux modernisation.** `default-terminal "tmux-256color"` plus
   `terminal-features ":RGB"` for truecolor and undercurl. Also
   `bind-key a send-keys C-b` looks like it was meant to be `send-prefix`.
+- **A cache volume for devcontainers.** `dcup` runs the full bootstrap in every
+  new container, so the apt install and the parser build are paid again each
+  time. A named volume at a fixed path (`/var/lib/dotfiles-cache`) holding
+  `~/.local/share/nvim` and the oh-my-zsh clone would make the second container
+  onwards nearly free. Deferred on purpose: a Treesitter parser `.so` is
+  compiled against the image's glibc, so one volume shared across image
+  families would hand a bookworm-built parser to an Alpine container. It needs
+  the volume name scoped per family before it is safe.
 - **`setup.sh --check`** — a doctor that reports drift between `$HOME` and the
   repo (broken symlinks, missing packages, a file where a link belongs)
   without changing anything.

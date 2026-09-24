@@ -113,20 +113,6 @@ When `40-link` finds a real file where a symlink should go, it moves it to
 
 ## Containers and devcontainers
 
-`install.sh` is the entry point VS Code Dev Containers and GitHub Codespaces
-look for. Point them at it:
-
-```jsonc
-// devcontainer.json
-"dotfiles": {
-  "repository": "https://github.com/<you>/dotfiles",
-  "installCommand": "install.sh"
-}
-```
-
-It runs `setup.sh --profile container`. Or by hand: `./install.sh`, or
-`./setup.sh --profile container`.
-
 Two axes decide what happens, kept separate on purpose:
 
 | | Values | Decides |
@@ -139,20 +125,79 @@ the AUR without needing a special case. The profile is detected from
 `/.dockerenv`, `/run/.containerenv`, `$REMOTE_CONTAINERS`, `$CODESPACES` and
 `$DEVCONTAINER`; `--profile` overrides it.
 
-In the container profile:
+### A machine with nothing on it (Codespaces, a fresh VM)
+
+`install.sh` is the entry point Codespaces and the Dev Containers extension
+look for, and it runs `setup.sh --profile container`. With the devcontainer
+CLI the equivalent is:
+
+```bash
+devcontainer up --workspace-folder . \
+  --dotfiles-repository https://github.com/<you>/dotfiles \
+  --dotfiles-install-command install.sh
+```
+
+### A devcontainer on your own machine (devcontainer CLI)
+
+The repo is already on the host, so cloning it again only hides your local
+edits. `dcup` bind-mounts it at `/dotfiles` and runs the bootstrap inside:
+
+```bash
+dcup          # devcontainer up, with the mounts, then setup.sh
+dcexec zsh    # a shell in it
+```
+
+Because the symlinks point into the mount, editing a config on the host takes
+effect in the container with no rebuild.
+
+Shells inside the container wear an orange badge with the project name, so a
+container prompt is never mistaken for the host one:
+
+```
+ frete-agil  ➜  app git:(main) ✗
+```
+
+`dcup` and `dcexec` set `DOTFILES_CONTAINER` for it. A container that came up
+some other way still gets a badge, just the generic `container` — `shell/env.sh`
+falls back to `/.dockerenv` and `/run/.containerenv`.
+
+`dcexec` also forwards `TERM` and `COLORTERM`. Left alone, `devcontainer exec`
+starts the shell with `TERM=xterm`, whose terminfo advertises 8 colours: zsh
+then drops every 256-colour prompt escape it is given, and Neovim renders its
+colourscheme washed out.
+
+The CLI is not the VS Code extension: it copies no `~/.gitconfig` and forwards
+no ssh-agent. `dcup` does both by hand, and skips any mount whose source the
+host does not have. It passes extra arguments through, so `dcup --build-no-cache`
+works.
+
+The first `dcup` in a project pays for the package install and the parser
+build. When the image already carries Neovim, zsh and the CLI tools, skip all
+of that and only place the symlinks:
+
+```bash
+dcexec /dotfiles/setup.sh --only 40
+```
+
+### In the container profile
 
 - The AUR is skipped — `makepkg` refuses to run as root by design.
-- `chsh` is skipped — set the shell in `devcontainer.json` instead.
+- `chsh` is skipped; the change would not survive the image anyway. Use
+  `dcexec zsh`.
 - `sudo` is only used when not already root, so a root container with no sudo
   installed still works.
 - Git identity is taken from `/etc/gitconfig` if something mounted it there
-  (which is what the `dcup` function does), otherwise from `$GIT_AUTHOR_NAME`
-  and `$GIT_AUTHOR_EMAIL`. It never blocks on a prompt.
+  (which is what `dcup` does), otherwise from `$GIT_AUTHOR_NAME` and
+  `$GIT_AUTHOR_EMAIL`. It never blocks on a prompt.
+- `build-essential` is dropped when the image already has `cc` and `c++`. It is
+  the most expensive entry in the list, and Treesitter needs both compilers —
+  several parsers ship a C++ scanner.
 - `packages/apt/base.txt` is deliberately leaner: no docker, no postgresql
   server, nothing the image or host already provides.
 
 Debian stable ships Neovim 0.10, and this config needs 0.11 (`vim.hl.on_yank`),
 so `15-nvim-release` replaces it with the official build. On Arch it is a no-op.
+
 
 ## Requirements
 

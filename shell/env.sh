@@ -61,3 +61,15 @@ for _d in "$XDG_STATE_HOME" "$XDG_STATE_HOME/less" "$XDG_STATE_HOME/bash" \
   [ -d "$_d" ] || mkdir -p "$_d"
 done
 unset _d
+
+# --- container badge -------------------------------------------------------
+
+# dcup exports DOTFILES_CONTAINER with the project name; anything else that put
+# us in a container still gets a badge, just a generic one. Empty on the host,
+# which is what keeps the badge out of the way there.
+if [ -z "${DOTFILES_CONTAINER:-}" ] && { [ -f /.dockerenv ] || [ -f /run/.containerenv ]; }; then
+  DOTFILES_CONTAINER=container
+fi
+if [ -n "${DOTFILES_CONTAINER:-}" ]; then
+  export DOTFILES_CONTAINER
+fi

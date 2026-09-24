@@ -29,6 +29,11 @@ _fgcolor='\[\033[0m\]'
 _arrow=$'\xe2\x86\x92'
 PS1="\w${_txtylw} \n${_arrow} ${_fgcolor}"
 
+# Orange badge so a container shell is never mistaken for the host one.
+if [ -n "${DOTFILES_CONTAINER:-}" ]; then
+  PS1="\[\033[48;5;208;38;5;16m\] ${DOTFILES_CONTAINER} \[\033[0m\] $PS1"
+fi
+
 GIT_PROMPT_ONLY_IN_REPO=1
 GIT_PROMPT_END="${_txtylw} \n${_arrow} ${_fgcolor}"
 

@@ -44,8 +44,8 @@ fi
 zsh_path=$(command -v zsh)
 if [[ $(detect_profile) == container ]]; then
   # chsh wants a password and the change would not survive the container
-  # anyway. Set the shell in devcontainer.json instead.
-  skip "container profile -- set the shell via \"userEnvProbe\"/image config, not chsh"
+  # anyway. Enter zsh explicitly instead.
+  skip "container profile -- chsh skipped; open shells with zsh (e.g. dcexec zsh)"
 # Compare resolved paths: on Arch /bin is a symlink to /usr/bin, so $SHELL can
 # read /bin/zsh while command -v reports /usr/bin/zsh for the very same shell.
 elif [[ $(readlink -f "${SHELL:-/nonexistent}") == "$(readlink -f "$zsh_path")" ]]; then

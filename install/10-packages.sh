@@ -47,6 +47,23 @@ case $manager in
     ;;
   apt)
     export DEBIAN_FRONTEND=noninteractive
+
+    # build-essential is the most expensive entry in the list, and most
+    # devcontainer images already carry a toolchain. Treesitter compiles its
+    # parsers, and several of them ship a C++ scanner, so only drop it when
+    # both compilers are already there.
+    if have cc && have c++; then
+      kept=()
+      for pkg in "${pkgs[@]}"; do
+        [[ $pkg == build-essential ]] && continue
+        kept+=("$pkg")
+      done
+      if [[ ${#kept[@]} -ne ${#pkgs[@]} ]]; then
+        skip "build-essential -- the image already has cc and c++"
+        pkgs=("${kept[@]}")
+      fi
+    fi
+
     as_root apt-get update -qq
     as_root apt-get install -y --no-install-recommends "${pkgs[@]}"
 
