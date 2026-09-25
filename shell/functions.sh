@@ -19,6 +19,14 @@ dcup() {
   # 60-identity reads /etc/gitconfig before anything else.
   if [ -f "$gitconfig" ]; then
     args+=(--mount "type=bind,source=$gitconfig,target=/etc/gitconfig")
+
+    # config.local holds the actual identity and is included by a relative
+    # path, which git resolves against /etc once mounted there -- so it has
+    # to land at /etc/config.local, not wherever it sits on the host.
+    local gitconfig_local="$(dirname "$gitconfig")/config.local"
+    if [ -f "$gitconfig_local" ]; then
+      args+=(--mount "type=bind,source=$gitconfig_local,target=/etc/config.local")
+    fi
   fi
   if [ -d "$HOME/.claude" ]; then
     args+=(--mount "type=bind,source=$HOME/.claude,target=/var/lib/claude-code")
