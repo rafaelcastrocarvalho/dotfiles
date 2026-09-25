@@ -16,8 +16,8 @@ name="" email=""
 
 # `dcup` bind-mounts the host's git config at /etc/gitconfig, so inside a
 # container the identity is already there and prompting for it would be wrong.
-if [[ -r /etc/gitconfig ]] && git config --file /etc/gitconfig user.email >/dev/null 2>&1; then
-  skip "identity comes from /etc/gitconfig ($(git config --file /etc/gitconfig user.email))"
+if [[ -r /etc/gitconfig ]] && git config --file /etc/gitconfig --includes user.email >/dev/null 2>&1; then
+  skip "identity comes from /etc/gitconfig ($(git config --file /etc/gitconfig --includes user.email))"
   exit 0
 fi
 
